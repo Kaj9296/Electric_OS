@@ -7,10 +7,16 @@ void* operator new(uint64_t Size)
     return STL::Malloc(Size);
 }
 
-void operator delete(void* Address, uint64_t Size) 
+//Delete operators cause a page fault for an unknown reason.
+/*void operator delete(void* Address, uint64_t Size) 
 {
     return STL::Free(Address);
 }
+
+void operator delete(void* Address) 
+{
+    return STL::Free(Address);
+}*/
 
 namespace STL
 {    

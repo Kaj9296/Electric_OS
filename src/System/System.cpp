@@ -546,7 +546,7 @@ namespace System
         {
             if (Hash == StartableProcesses[i].Hash)
             {
-                //return STL::ToString(ProcessHandler::StartProcess(StartableProcesses[i].Procedure));
+                new Process(StartableProcesses[i].Procedure, nullptr);
                 return "";
             }
         }

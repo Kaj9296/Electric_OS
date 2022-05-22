@@ -21,7 +21,7 @@ namespace ProcessHandler
     /// The process that is currently in control.
     /// </summary>       
     extern Process* ActiveProcess;
-
+    
     void KeyBoardInterupt();
 
     void MouseInterupt();

@@ -26,7 +26,7 @@ namespace Compositor
     {            
         if (ProcessHandler::GrandFatherProcess != nullptr)
         {
-            ProcessHandler::GrandFatherProcess->Render(&Backbuffer);
+            ProcessHandler::GrandFatherProcess->Render(&Backbuffer, STL::Point(0, 0), STL::Point(Backbuffer.Width, Backbuffer.Height));
         }
         SwapBuffers();
     }

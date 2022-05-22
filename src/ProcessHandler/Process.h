@@ -8,7 +8,7 @@ class Process
 {
 public:
 
-    void Render(STL::Framebuffer* Buffer);
+    void Render(STL::Framebuffer* Buffer, STL::Point DomainOrigin, STL::Point DomainSize);
 
     void HandleRequest();
 
@@ -18,10 +18,12 @@ public:
 
     void PushRequest(STL::PROR Request);
 
+    void Adopt(Process* Child);
+
     Process(STL::PROC Procedure, Process* Parent);
 
 private:
-
+    
     void Kill();
 
     STL::PROR PopRequest();
