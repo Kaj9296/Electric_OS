@@ -6,26 +6,27 @@
 #include "STL/List/List.h"
 
 namespace ProcessHandler    
-{           
-    extern Process* FocusedProcess;
-    extern Process* LastMessagedProcess;
-    extern Process* MovingWindow;
+{               
+    /// <summary>
+    /// The process at the base of the tree.
+    /// </summary>
+    extern Process* GrandFatherProcess;
 
-    extern STL::List<Process*> Processes;
+    /// <summary>
+    /// The process that was last created or clicked.
+    /// </summary>    
+    extern Process* FocusedProcess;
+
+    /// <summary>
+    /// The process that is currently in control.
+    /// </summary>       
+    extern Process* ActiveProcess;
 
     void KeyBoardInterupt();
 
     void MouseInterupt();
 
-    void PITInterupt();
-
-    void KillAllProcesses();
-
-    Process* GetProcess(uint64_t ID);
-
-    bool KillProcess(uint64_t ProcessID);
-
-    uint64_t StartProcess(STL::PROC Procedure);
+    void PITInterupt(uint64_t Ticks);
 
     void Loop();   
 }

@@ -43,7 +43,7 @@ namespace Desktop
         case STL::PROM::INIT:
         {
             STL::PINFO* Info = (STL::PINFO*)Input;
-            Info->Type = STL::PROT::FULLSCREEN;
+            Info->Type = STL::PROT::GRANDFATHER;
             Info->Depth = 0;
             Info->Title = "Desktop";
 

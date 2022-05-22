@@ -18,6 +18,7 @@ If your insane enough to try and run on it real hardware simply flash the .img f
 
 ## Next steps 
 
+Make heap part of STL.
 Implement grandfather system for processes.
 Implement startchild and startsibling commands.
 Fix shutdown general protection fault.  

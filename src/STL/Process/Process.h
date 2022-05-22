@@ -29,7 +29,7 @@ namespace STL
 
     enum class PROT //Process Type
     {
-        FULLSCREEN,
+        GRANDFATHER,
         WINDOWED,
         FRAMELESSWINDOW,
         MINIMIZED

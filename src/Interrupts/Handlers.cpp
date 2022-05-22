@@ -151,7 +151,7 @@ namespace InteruptHandlers
         }
 
         /// Notify processes of interupt.
-        ProcessHandler::PITInterupt();
+        ProcessHandler::PITInterupt(PIT::Ticks);
 
         IO::OutByte(PIC1_COMMAND, PIC_EOI);
     }

@@ -58,7 +58,7 @@ namespace System
 
         SettableVar SettableVars[] =
         {
-            SettableVar("drawmouse", &Compositor::DrawMouse, sizeof(Compositor::DrawMouse)),
+            //SettableVar("drawmouse", &Compositor::DrawMouse, sizeof(Compositor::DrawMouse)),
             SettableVar("font", &STL::SelectedFont, sizeof(STL::SelectedFont))
         };
 
@@ -164,12 +164,12 @@ namespace System
 
             WriteLine(2);
 
-            for (uint32_t i = 0; i < ProcessHandler::Processes.Length(); i++)
+            /*for (uint32_t i = 0; i < ProcessHandler::Processes.Length(); i++)
             {                
                 StartLine(ProcessHandler::Processes[i]->GetTitle());
 
                 EndLine(STL::ToString(ProcessHandler::Processes[i]->GetID()));
-            }
+            }*/
 
             WriteLine(2);
         }
@@ -421,30 +421,30 @@ namespace System
 
     const char* CommandKill(const char* Command)
     {
-        if (ProcessHandler::KillProcess(STL::ToInt(STL::NextWord(Command))))
+        /*if (ProcessHandler::KillProcess(STL::ToInt(STL::NextWord(Command))))
         {
             return "Process killed";
         }
         else
         {
             return "ERROR: Could not kill process";
-        }
+        }*/
     }
 
     const char* CommandSuicide(const char* Command)
     {
-        if (ProcessHandler::LastMessagedProcess != nullptr)
+        if (ProcessHandler::ActiveProcess != nullptr)
         {
-            ProcessHandler::KillProcess(ProcessHandler::LastMessagedProcess->GetID());
+            ProcessHandler::ActiveProcess->PushRequest(STL::PROR::KILL);
         }
         return "";
     }
 
     const char* CommandClear(const char* Command)
     {
-        if (ProcessHandler::LastMessagedProcess != nullptr)
+        if (ProcessHandler::ActiveProcess != nullptr)
         {
-            ProcessHandler::LastMessagedProcess->Clear();
+            ProcessHandler::ActiveProcess->PushRequest(STL::PROR::CLEAR);
         }
         return "";
     }    
@@ -463,7 +463,7 @@ namespace System
 
         asm("CLI");
 
-        //UEFI::GetRT()->ResetSystem(EfiResetType::Shutdown, 0, 0, nullptr);
+        UEFI::GetRT()->ResetSystem(EfiResetType::Shutdown, 0, 0, nullptr);
 
         Renderer::Clear();
 
@@ -546,7 +546,8 @@ namespace System
         {
             if (Hash == StartableProcesses[i].Hash)
             {
-                return STL::ToString(ProcessHandler::StartProcess(StartableProcesses[i].Procedure));
+                //return STL::ToString(ProcessHandler::StartProcess(StartableProcesses[i].Procedure));
+                return "";
             }
         }
 
@@ -653,7 +654,7 @@ namespace System
         Write(7, "Used Heap: ", STL::ToString(Heap::GetUsedSize() / 1000), " KB   ");
         Write(8, "Total Heap: ", STL::ToString((Heap::GetUsedSize() + Heap::GetFreeSize()) / 1000), " KB   ");
         Write(9, "Heap Segments: ", STL::ToString(Heap::GetSegmentAmount()));
-        Write(10, "Process Amount: ", STL::ToString(ProcessHandler::Processes.Length()));
+        //Write(10, "Process Amount: ", STL::ToString(ProcessHandler::Processes.Length()));
 
         Write(14, "\033B040044052   \033B224108117   \033B229192123   \033B152195121   \033B097175239   \033B198120221   \033B000000000");
         Write(15, "\033B040044052   \033B224108117   \033B229192123   \033B152195121   \033B097175239   \033B198120221   \033B000000000");

@@ -31,7 +31,7 @@ namespace tty
         case STL::PROM::INIT:
         {
             STL::PINFO* Info = (STL::PINFO*)Input;
-            Info->Type = STL::PROT::FULLSCREEN;
+            Info->Type = STL::PROT::GRANDFATHER;
             Info->Title = "tty";
             Info->Depth = 0;
 
@@ -152,9 +152,12 @@ namespace tty
         break;
         case STL::PROM::CLEAR:
         {
-            Text = "";
+            Text = "> ";
             Command[0] = 0;
             CursorPos = STL::Point(0, 0);
+            RedrawText = true;
+
+            return STL::PROR::DRAW;
         }
         break;
         case STL::PROM::KILL:

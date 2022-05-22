@@ -70,6 +70,19 @@ namespace STL
             this->Size--;
         }
 
+        int64_t Find(T Target)
+        {
+            for (uint32_t i = 0; i < this->Size; i++)
+            {
+                if (this->Data[i] == Target)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         T& Last()
         {            
             return Data[this->Size - 1];
