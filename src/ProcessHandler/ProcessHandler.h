@@ -24,7 +24,7 @@ namespace ProcessHandler
     
     void KeyBoardInterupt();
 
-    void MouseInterupt();
+    void MouseInterupt(STL::MDATA MouseInfo);
 
     void PITInterupt(uint64_t Ticks);
 

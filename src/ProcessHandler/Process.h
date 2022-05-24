@@ -12,6 +12,8 @@ public:
 
     void HandleRequest();
 
+    void HandleMouseData(STL::MDATA MouseData);
+
     void SendFamilyMessage(STL::PROM Message, STL::PROI Input = nullptr);
 
     void SendMessage(STL::PROM Message, STL::PROI Input = nullptr);
@@ -27,13 +29,16 @@ private:
     void Kill();
 
     STL::PROR PopRequest();
-
+    
     STL::Point Pos;
+    STL::String Title;
 
-    STL::PROT Type;
     STL::PROC Procedure;
     STL::Framebuffer FrameBuffer;
-    
+
+    STL::Point FrameSize;
+    void(*RenderFrameFunction)(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title);
+
     uint64_t RequestAmount;
     STL::PROR Requests[16];
 

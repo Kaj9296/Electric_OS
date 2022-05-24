@@ -125,7 +125,7 @@ namespace Topbar
         break;
         case STL::PROM::MOUSE:
         {
-            STL::MINFO MouseInfo = *(STL::MINFO*)Input;
+            STL::MDATA MouseInfo = *(STL::MDATA*)Input;
 
             if (SystemButton.IsToggled(MouseInfo))
             {

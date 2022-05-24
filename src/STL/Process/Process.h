@@ -56,7 +56,7 @@ namespace STL
         String Title;
     };
 
-    struct MINFO //Mouse Info
+    struct MDATA //Mouse Data
     {       
         Point Pos;
 

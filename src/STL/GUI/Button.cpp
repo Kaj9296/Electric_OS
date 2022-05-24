@@ -17,7 +17,7 @@ namespace STL
         Buffer->Print(this->Text.cstr(), TextPos, this->Scale, STL::ARGB(60), this->Color);
     }
 
-    bool Button::IsToggled(MINFO MouseInfo)
+    bool Button::IsToggled(MDATA MouseInfo)
     {
         if (MouseInfo.LeftHeld && MouseInfo.Pos.X > this->TopLeft.X && MouseInfo.Pos.Y > this->TopLeft.Y && MouseInfo.Pos.X < this->BottomRight.X && MouseInfo.Pos.Y < this->BottomRight.Y)
         {
@@ -27,7 +27,7 @@ namespace STL
         return false;
     } 
 
-    bool Button::IsPressed(MINFO MouseInfo) 
+    bool Button::IsPressed(MDATA MouseInfo) 
     {
         bool Temp = this->Pressed;
         this->Pressed = MouseInfo.LeftHeld && MouseInfo.Pos.X > this->TopLeft.X && MouseInfo.Pos.Y > this->TopLeft.Y && MouseInfo.Pos.X < this->BottomRight.X && MouseInfo.Pos.Y < this->BottomRight.Y;

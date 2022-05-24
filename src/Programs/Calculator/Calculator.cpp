@@ -171,7 +171,7 @@ namespace Calculator
         break;        
         case STL::PROM::MOUSE:
         {
-            STL::MINFO MouseInfo = *(STL::MINFO*)Input;
+            STL::MDATA MouseInfo = *(STL::MDATA*)Input;
 
             for (int i = 0; i < 10; i++)
             {

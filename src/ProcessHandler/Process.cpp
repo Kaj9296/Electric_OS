@@ -5,6 +5,48 @@
 #include "Renderer/Renderer.h"
 #include "Debug/Debug.h"
 
+#define FRAME_OFFSET STL::Point(0, 30)
+#define CLOSE_BUTTON_SIZE STL::Point(16, 16)
+#define CLOSE_BUTTON_OFFSET STL::Point(((FRAME_OFFSET.X - CLOSE_BUTTON_SIZE.X) / 2 - CLOSE_BUTTON_SIZE.X), -FRAME_OFFSET.Y / 2 - CLOSE_BUTTON_SIZE.Y / 2)
+#define MINIMIZE_BUTTON_SIZE STL::Point(16, 16)
+#define MINIMIZE_BUTTON_OFFSET CLOSE_BUTTON_OFFSET - STL::Point(16 + RAISED_WIDTH * 3, 0)
+
+void RenderSimpleFrame(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title)
+{
+    STL::ARGB Background;
+    STL::ARGB Foreground;
+    //if (this == ProcessHandler::FocusedProcess)
+    {
+        //Background = STL::ARGB(255, 14, 0, 135);            
+        //Foreground = STL::ARGB(255);
+    }
+    //else
+    {
+        Background = STL::ARGB(128);            
+        Foreground = STL::ARGB(192);            
+    }
+
+    //Draw topbar
+    Buffer->DrawRaisedRectEdge(ScreenPos - FRAME_OFFSET, ScreenPos + WindowSize);
+    Buffer->DrawRect(ScreenPos - FRAME_OFFSET, ScreenPos + STL::Point(WindowSize.X, 0), Background);
+
+    //Draw close button                    
+    STL::Point CloseButtonPos = CLOSE_BUTTON_OFFSET + STL::Point(WindowSize.X, 0) + ScreenPos;                    
+    Buffer->DrawRect(CloseButtonPos, CloseButtonPos + CLOSE_BUTTON_SIZE, STL::ARGB(200));
+    Buffer->PutChar('X', CloseButtonPos + STL::Point(RAISED_WIDTH, 2), 1, STL::ARGB(0), STL::ARGB(200));
+    Buffer->DrawRaisedRectEdge(CloseButtonPos, CloseButtonPos + CLOSE_BUTTON_SIZE);
+
+    //Draw minimize button                    
+    STL::Point MinimizeButtonPos = MINIMIZE_BUTTON_OFFSET + STL::Point(WindowSize.X, 0) + ScreenPos;
+    Buffer->DrawRect(MinimizeButtonPos, MinimizeButtonPos + MINIMIZE_BUTTON_SIZE, STL::ARGB(200));
+    Buffer->PutChar('_', MinimizeButtonPos + STL::Point(RAISED_WIDTH, 0), 1, STL::ARGB(0), STL::ARGB(200));
+    Buffer->DrawRaisedRectEdge(MinimizeButtonPos, MinimizeButtonPos + MINIMIZE_BUTTON_SIZE);
+
+    //Print Title
+    STL::Point TextPos = ScreenPos + STL::Point(RAISED_WIDTH * 2, -FRAME_OFFSET.Y / 2 - 8);
+    Buffer->Print(Title.cstr(), TextPos, 1, Foreground, Background); 
+}
+
 void Process::Render(STL::Framebuffer* Buffer, STL::Point DomainOrigin, STL::Point DomainSize)
 {
     STL::Point ScreenPos = DomainOrigin + this->Pos;
@@ -21,6 +63,11 @@ void Process::Render(STL::Framebuffer* Buffer, STL::Point DomainOrigin, STL::Poi
         STL::CopyMemory(Source, Dest, this->FrameBuffer.PixelsPerScanline * 4);
         Source = (void*)((uint64_t)Source + this->FrameBuffer.PixelsPerScanline * 4);
         Dest = (void*)((uint64_t)Dest + Buffer->PixelsPerScanline * 4);   
+    }
+
+    if (this->RenderFrameFunction != nullptr)
+    {
+        this->RenderFrameFunction(Buffer, ScreenPos, STL::Point(this->FrameBuffer.Width, this->FrameBuffer.Height), this->Title);
     }
 
     for (uint32_t i = 0; i < this->Children.Length(); i++)
@@ -71,6 +118,11 @@ void Process::HandleRequest()
     }
 }
 
+void Process::HandleMouseData(STL::MDATA MouseData)
+{
+
+}
+
 void Process::SendFamilyMessage(STL::PROM Message, STL::PROI Input)
 {
     for (uint64_t i = 0; i < this->Children.Length(); i++)
@@ -94,7 +146,7 @@ void Process::SendMessage(STL::PROM Message, STL::PROI Input)
 
 void Process::PushRequest(STL::PROR Request)
 {
-    if (this->Type != STL::PROT::MINIMIZED && Request != STL::PROR::SUCCESS && RequestAmount < 16)
+    if (Request != STL::PROR::SUCCESS && RequestAmount < 16)
     {
         Requests[RequestAmount] = Request;
         RequestAmount++;
@@ -144,7 +196,7 @@ void Process::Kill()
 
 STL::PROR Process::PopRequest()
 {
-    if (this->Type != STL::PROT::MINIMIZED && RequestAmount > 0)
+    if (RequestAmount > 0)
     {        
         RequestAmount--;
         return Requests[RequestAmount];
@@ -159,6 +211,11 @@ Process::Process(STL::PROC Procedure, Process* Parent)
     STL::PINFO Info;
     this->SendMessage(STL::PROM::INIT, &Info);    
     
+    this->Title = Info.Title;
+
+    this->FrameSize = STL::Point(0, 0);
+    this->RenderFrameFunction = nullptr;
+
     switch(Info.Type)
     {
     case STL::PROT::GRANDFATHER:
@@ -181,6 +238,11 @@ Process::Process(STL::PROC Procedure, Process* Parent)
         ProcessHandler::GrandFatherProcess = this;
     }
     break;
+    case STL::PROT::WINDOWED:
+    {
+        this->FrameSize = FRAME_OFFSET + RAISED_WIDTH;
+        this->RenderFrameFunction = RenderSimpleFrame;
+    }
     case STL::PROT::FRAMELESSWINDOW:
     {        
         this->Pos = STL::Point(Info.Left, Info.Top);

@@ -698,7 +698,7 @@ namespace Tetris
         break;        
         case STL::PROM::MOUSE:
         {
-            STL::MINFO MouseInfo = *(STL::MINFO*)Input;
+            STL::MDATA MouseInfo = *(STL::MDATA*)Input;
 
             return STL::PROR::DRAW;
         }

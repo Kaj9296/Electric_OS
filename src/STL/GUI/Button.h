@@ -23,9 +23,9 @@ namespace STL
 
         void Draw(Framebuffer* Buffer);
 
-        bool IsToggled(MINFO MouseInfo);
+        bool IsToggled(MDATA MouseInfo);
 
-        bool IsPressed(MINFO MouseInfo);
+        bool IsPressed(MDATA MouseInfo);
 
         bool IsDown();
 

@@ -203,8 +203,12 @@ namespace InteruptHandlers
             
             Mouse::HandleMousePacket(MousePacket);
             
-            /// Notify processes of interupt.
-            ProcessHandler::MouseInterupt();
+            STL::MDATA MouseData;
+            MouseData.Pos = Mouse::Position;
+            MouseData.LeftHeld = Mouse::LeftHeld;
+            MouseData.MiddleHeld = Mouse::MiddleHeld;
+            MouseData.RightHeld = Mouse::RightHeld;
+            ProcessHandler::MouseInterupt(MouseData);
         }
         break;
         }

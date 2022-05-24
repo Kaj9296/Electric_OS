@@ -96,7 +96,7 @@ namespace StartMenu
         break;
         case STL::PROM::MOUSE:
         {
-            STL::MINFO MouseInfo = *(STL::MINFO*)Input;
+            STL::MDATA MouseInfo = *(STL::MDATA*)Input;
 
             for (uint64_t i = 0; i < StartableProcessesAmount; i++)
             {
