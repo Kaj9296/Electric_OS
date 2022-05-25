@@ -89,13 +89,11 @@ void Process::HandleRequest()
     {
         this->FrameBuffer.Clear();
         this->SendMessage(STL::PROM::CLEAR, &this->FrameBuffer);
-        //Compositor::Update(i);
     }
     break;
     case STL::PROR::DRAW:
     {
         this->SendMessage(STL::PROM::DRAW, &this->FrameBuffer);
-        //Compositor::Update(i);
     }
     break;
     case STL::PROR::KILL:
@@ -200,7 +198,7 @@ STL::PROR Process::PopRequest()
     {        
         RequestAmount--;
         return Requests[RequestAmount];
-    }   
+    }
     return STL::PROR::SUCCESS;
 }
 
@@ -215,6 +213,8 @@ Process::Process(STL::PROC Procedure, Process* Parent)
 
     this->FrameSize = STL::Point(0, 0);
     this->RenderFrameFunction = nullptr;
+
+    this->RequestAmount = 0;
 
     switch(Info.Type)
     {

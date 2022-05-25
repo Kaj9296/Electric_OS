@@ -18,9 +18,9 @@ If your insane enough to try and run on it real hardware simply flash the .img f
 
 ## Next steps 
 
-Fix GP fault in Processhandler::Loop function.
 Remove uneccesaery global variables.
 Make heap part of STL.
+Improve error checking and security in both the bootloader and kernel.
 Implement grandfather system for processes.
 Implement startchild and startsibling commands.
 Fix shutdown general protection fault.  

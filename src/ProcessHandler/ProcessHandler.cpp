@@ -6,9 +6,9 @@
 
 namespace ProcessHandler
 {            
-    Process* GrandFatherProcess;
-    Process* FocusedProcess;
-    Process* ActiveProcess;
+    Process* GrandFatherProcess = nullptr;
+    Process* FocusedProcess = nullptr;
+    Process* ActiveProcess = nullptr;
 
     void KeyBoardInterupt()
     {
