@@ -57,6 +57,33 @@ namespace STL
         this->Data = NewData;
     }
 
+    bool String::operator==(const char* Other)
+    {
+        uint32_t OtherLength = STL::Length(Other);
+
+        if (this->Size == OtherLength)
+        {
+            for (uint32_t i = 0; i < this->Size; i++)
+            {
+                if (this->Data[i] != Other[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool String::operator==(String& Other)
+    {
+        return (*this == Other.cstr());
+    }
+
     void String::operator+=(char const& Other)
     {
         this->Size++;

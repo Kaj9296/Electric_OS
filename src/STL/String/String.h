@@ -18,6 +18,10 @@ namespace STL
 
         void Reserve(uint32_t MinSize);
 
+        bool operator==(const char* Other);
+
+        bool operator==(String& Other);
+
         void operator=(char const& Other);
 
         void operator+=(char const& Other);

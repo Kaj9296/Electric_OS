@@ -4,10 +4,11 @@
 
 #include "IO/IO.h"
 #include "Renderer/Renderer.h"
+#include "ProcessHandler/ProcessHandler.h"
 
-#define PS2Leftbutton 0b00000001
-#define PS2Middlebutton 0b00000010
-#define PS2Rightbutton 0b00000100
+#define PS2Leftbutton   0b00000001
+#define PS2Middlebutton 0b00000100
+#define PS2Rightbutton  0b00000010
 #define PS2XSign 0b00010000
 #define PS2YSign 0b00100000
 #define PS2XOverflow 0b01000000
@@ -15,14 +16,6 @@
 
 namespace Mouse
 { 
-    STL::Point Position;
-
-    bool LeftHeld;
-    
-    bool MiddleHeld;
-    
-    bool RightHeld;
-
     /// <summary>
     /// Waits untill the mouse is ready to recive data or untill a timeout is reached.
     /// </summary>
@@ -77,9 +70,6 @@ namespace Mouse
 
     void InitPS2()
     {
-        Position.X = 500;
-        Position.Y = 500;
-
         IO::OutByte(0x64, 0xA8); //Enable mouse
         MouseWait();
 
@@ -100,44 +90,88 @@ namespace Mouse
         MouseRead();
     }
     
-    void HandleMousePacket(uint8_t* MousePacket)
-    {   
-        /// If sign bit is set move in negative direction.
-        if (MousePacket[0] & PS2XSign)
-        {      
-            MousePacket[1] = 256 - MousePacket[1];
-            Position.X -= MousePacket[1];
-        } 
-        else
-        {
-            Position.X += MousePacket[1];
-        }
-        if (MousePacket[0] & PS2YSign)
-        {
-            MousePacket[2] = 256 - MousePacket[2];
-            Position.Y += MousePacket[2];
-        }
-        else
-        {
-            Position.Y -= MousePacket[2];
-        }
+    void HandleMouseByte(uint8_t MouseByte)
+    {           
+        static STL::Point MousePos = STL::Point(500, 500);
 
-        /// Check for button presses.
-        if ((MousePacket[0] & PS2Leftbutton))
-        {
-            LeftHeld = true;
-        }  
-        if ((MousePacket[0] & PS2Middlebutton))
-        {
-            MiddleHeld = true;
-        }
-        if ((MousePacket[0] & PS2Rightbutton))
-        {
-            RightHeld = true;
-        }
+        static uint8_t MouseCycle = 0;
+        static uint8_t MousePacket[4];
 
-        /// Clamp mouse pos to the screen.
-        Position.X = STL::Clamp(Position.X, 0, Renderer::GetScreenSize().X - 8);
-        Position.Y = STL::Clamp(Position.Y, 0, Renderer::GetScreenSize().Y - 16);
+        switch(MouseCycle)
+        {
+        case 0:
+        {
+            if (((MouseByte & 0b00001000) == 0))
+            {
+                break;
+            }
+            MousePacket[0] = MouseByte;
+            MouseCycle++;
+        }
+        break;
+        case 1:
+        {
+            MousePacket[1] = MouseByte;
+            MouseCycle++;
+        }
+        break;
+        case 2:
+        {
+            MousePacket[2] = MouseByte;
+            MouseCycle = 0;
+            
+            /// If sign bit is set move in negative direction.
+            if (MousePacket[0] & PS2XSign)
+            {      
+                MousePacket[1] = 256 - MousePacket[1];
+                MousePos.X -= MousePacket[1];
+            } 
+            else
+            {
+                MousePos.X += MousePacket[1];
+            }
+
+            if (MousePacket[0] & PS2YSign)
+            {
+                MousePacket[2] = 256 - MousePacket[2];
+                MousePos.Y += MousePacket[2];
+            }
+            else
+            {
+                MousePos.Y -= MousePacket[2];
+            }
+
+            /// Check for button presses.    
+            bool LeftHeld = false;          
+            bool MiddleHeld = false;  
+            bool RightHeld = false;
+
+            if ((MousePacket[0] & PS2Leftbutton))
+            {
+                LeftHeld = true;
+            }  
+            if ((MousePacket[0] & PS2Middlebutton))
+            {
+                MiddleHeld = true;
+            }
+            if ((MousePacket[0] & PS2Rightbutton))
+            {
+                RightHeld = true;
+            }
+
+            /// Clamp mouse pos to the screen.
+            MousePos.X = STL::Clamp(MousePos.X, 0, Renderer::GetScreenSize().X - 8);
+            MousePos.Y = STL::Clamp(MousePos.Y, 0, Renderer::GetScreenSize().Y - 16);
+            
+            STL::MDATA MouseData;
+            MouseData.Pos = MousePos;
+            MouseData.LeftHeld = LeftHeld;
+            MouseData.MiddleHeld = MiddleHeld;
+            MouseData.RightHeld = RightHeld;
+            
+            ProcessHandler::MouseInterupt(MouseData);
+        }
+        break;
+        }
     }
 }

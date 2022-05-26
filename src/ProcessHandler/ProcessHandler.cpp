@@ -20,13 +20,13 @@ namespace ProcessHandler
     }
 
     void MouseInterupt(STL::MDATA MouseData)
-    {
+    {        
+        Compositor::UpdateMouse(MouseData);
+
         if (GrandFatherProcess != nullptr)
         {
-            GrandFatherProcess->HandleMouseData(MouseData);
+            GrandFatherProcess->HandleMouseData(MouseData, STL::Point(0, 0));
         }
-
-        Compositor::UpdateMouse(MouseData);
     }
 
     void PITInterupt(uint64_t Ticks)

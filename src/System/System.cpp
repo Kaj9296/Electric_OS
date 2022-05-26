@@ -421,14 +421,17 @@ namespace System
 
     const char* CommandKill(const char* Command)
     {
-        /*if (ProcessHandler::KillProcess(STL::ToInt(STL::NextWord(Command))))
+        Process* FoundProcess = ProcessHandler::GrandFatherProcess->FindFamilyMember(STL::NextWord(Command));
+
+        if (FoundProcess != nullptr)
         {
-            return "Process killed";
+            FoundProcess->PushRequest(STL::PROR::KILL);
+            return "Process Killed";
         }
         else
         {
-            return "ERROR: Could not kill process";
-        }*/
+            return "ERROR: Unable to find process";
+        }
     }
 
     const char* CommandSuicide(const char* Command)

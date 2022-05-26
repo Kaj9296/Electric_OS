@@ -26,8 +26,8 @@ namespace Topbar
     void(*CurrentAnimation)(STL::Framebuffer*);
     uint64_t AnimationCounter = 0;
 
-    int64_t SystemMenuID = -1;
-    int64_t StartMenuID = -1;
+    bool SystemMenuStarted = false;
+    bool StartMenuStarted = false;
 
     inline void StartAnimation(void(*Animation)(STL::Framebuffer*))
     {
@@ -78,7 +78,8 @@ namespace Topbar
 
             BackgroundColor = STL::ARGB(255, 200, 200, 200);
 
-            SystemMenuID = -1;
+            SystemMenuStarted = false;
+            StartMenuStarted = false;
 
             TimeDateLabel = STL::Label("TEMP", STL::Point(Info->Width / 2 - 100, 4 + RAISED_WIDTH * 2), STL::Point(Info->Width / 2 + 100, Info->Height - 4 - RAISED_WIDTH * 2));
             TimeDateLabel.Style = STL::LabelStyle::Sunken;
@@ -129,32 +130,28 @@ namespace Topbar
 
             if (SystemButton.IsToggled(MouseInfo))
             {
-                if (SystemMenuID == -1)
+                if (SystemMenuStarted)
                 {
-                    SystemMenuID = STL::ToInt(STL::System("start systemmenu"));
+                    STL::System("kill SystemMenu");
                 }
                 else
                 {
-                    STL::String Command = "kill ";
-                    Command += STL::ToString(SystemMenuID);
-                    STL::System(Command.cstr());
-                    SystemMenuID = -1;
+                    STL::System("start SystemMenu");
                 }
+                SystemMenuStarted = !SystemMenuStarted;
             }
             
             if (StartButton.IsToggled(MouseInfo))
             {
-                if (StartMenuID == -1)
+                if (StartMenuStarted)
                 {
-                    StartMenuID = STL::ToInt(STL::System("start startmenu"));
+                    STL::System("kill StartMenu");
                 }
                 else
                 {
-                    STL::String Command = "kill ";
-                    Command += STL::ToString(StartMenuID);
-                    STL::System(Command.cstr());
-                    StartMenuID = -1;
+                    STL::System("start StartMenu");
                 }
+                StartMenuStarted = !StartMenuStarted;
             }
 
             return STL::PROR::DRAW;

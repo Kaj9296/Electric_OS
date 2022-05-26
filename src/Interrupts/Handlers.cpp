@@ -172,46 +172,10 @@ namespace InteruptHandlers
     }
 
     __attribute__((interrupt)) void Mouse(InterruptFrame* frame)
-    {        
-        static uint8_t MouseCycle = 0;
-        static uint8_t MousePacket[4];
+    {                
+        uint8_t MouseByte = IO::InByte(0x60);
 
-        uint8_t MouseData = IO::InByte(0x60);
-
-        switch(MouseCycle)
-        {
-        case 0:
-        {
-            if (((MouseData & 0b00001000) == 0))
-            {
-                break;
-            }
-            MousePacket[0] = MouseData;
-            MouseCycle++;
-        }
-        break;
-        case 1:
-        {
-            MousePacket[1] = MouseData;
-            MouseCycle++;
-        }
-        break;
-        case 2:
-        {
-            MousePacket[2] = MouseData;
-            MouseCycle = 0;
-            
-            Mouse::HandleMousePacket(MousePacket);
-            
-            STL::MDATA MouseData;
-            MouseData.Pos = Mouse::Position;
-            MouseData.LeftHeld = Mouse::LeftHeld;
-            MouseData.MiddleHeld = Mouse::MiddleHeld;
-            MouseData.RightHeld = Mouse::RightHeld;
-            ProcessHandler::MouseInterupt(MouseData);
-        }
-        break;
-        }
+        Mouse::HandleMouseByte(MouseByte);
 
         IO::OutByte(PIC2_COMMAND, PIC_EOI);
         IO::OutByte(PIC1_COMMAND, PIC_EOI);

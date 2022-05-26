@@ -12,7 +12,7 @@ public:
 
     void HandleRequest();
 
-    void HandleMouseData(STL::MDATA MouseData);
+    void HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin);
 
     void SendFamilyMessage(STL::PROM Message, STL::PROI Input = nullptr);
 
@@ -21,6 +21,8 @@ public:
     void PushRequest(STL::PROR Request);
 
     void Adopt(Process* Child);
+
+    Process* FindFamilyMember(const char* TargetTitle);
 
     Process(STL::PROC Procedure, Process* Parent);
 
@@ -37,7 +39,7 @@ private:
     STL::Framebuffer FrameBuffer;
 
     STL::Point FrameSize;
-    void(*RenderFrameFunction)(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title);
+    void(*RenderFrameFunction)(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title, bool IsFocused);
 
     uint64_t RequestAmount;
     STL::PROR Requests[16];

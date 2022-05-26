@@ -12,16 +12,16 @@
 #define MINIMIZE_BUTTON_SIZE STL::Point(16, 16)
 #define MINIMIZE_BUTTON_OFFSET CLOSE_BUTTON_OFFSET - STL::Point(16 + RAISED_WIDTH * 3, 0)
 
-void RenderSimpleFrame(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title)
+void RenderSimpleFrame(STL::Framebuffer* Buffer, STL::Point ScreenPos, STL::Point WindowSize, STL::String& Title, bool IsFocused)
 {
     STL::ARGB Background;
     STL::ARGB Foreground;
-    //if (this == ProcessHandler::FocusedProcess)
+    if (IsFocused)
     {
-        //Background = STL::ARGB(255, 14, 0, 135);            
-        //Foreground = STL::ARGB(255);
+        Background = STL::ARGB(255, 14, 0, 135);            
+        Foreground = STL::ARGB(255);
     }
-    //else
+    else
     {
         Background = STL::ARGB(128);            
         Foreground = STL::ARGB(192);            
@@ -68,7 +68,7 @@ void Process::Render(STL::Framebuffer* Buffer, STL::Point DomainOrigin, STL::Poi
 
     if (this->RenderFrameFunction != nullptr)
     {
-        this->RenderFrameFunction(Buffer, ScreenPos, STL::Point(this->FrameBuffer.Width, this->FrameBuffer.Height), this->Title);
+        this->RenderFrameFunction(Buffer, ScreenPos, STL::Point(this->FrameBuffer.Width, this->FrameBuffer.Height), this->Title, this == ProcessHandler::FocusedProcess);
     }
 
     for (uint32_t i = 0; i < this->Children.Length(); i++)
@@ -102,6 +102,7 @@ void Process::HandleRequest()
     case STL::PROR::KILL:
     {
         this->Kill();
+        Compositor::RequestRender();
         return;
     }
     break;
@@ -119,9 +120,35 @@ void Process::HandleRequest()
     }
 }
 
-void Process::HandleMouseData(STL::MDATA MouseData)
-{
+void Process::HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin)
+{    
+    STL::Point ScreenPos = DomainOrigin + this->Pos;
+    STL::Point TopLeft = ScreenPos - FrameSize;
+    STL::Point BottomRight = ScreenPos + STL::Point(this->FrameBuffer.Width, this->FrameBuffer.Height) + FrameSize;
 
+    if (STL::Contains(TopLeft, BottomRight, MouseData.Pos))
+    {
+        for (uint64_t i = this->Children.Length(); i --> 0; )
+        {
+            STL::Point ChildScreenPos = ScreenPos + this->Children[i]->Pos;
+            STL::Point ChildTopLeft = ChildScreenPos - this->Children[i]->FrameSize;
+            STL::Point ChildBottomRight = ChildScreenPos + STL::Point(this->Children[i]->FrameBuffer.Width, this->Children[i]->FrameBuffer.Height) + this->Children[i]->FrameSize;    
+            
+            if (STL::Contains(ChildTopLeft, ChildBottomRight, MouseData.Pos))
+            {            
+                this->Children[i]->HandleMouseData(MouseData, ScreenPos);
+                return;
+            }
+        }
+
+        MouseData.Pos = MouseData.Pos - ScreenPos;
+        this->SendMessage(STL::PROM::MOUSE, &MouseData);
+
+        if (MouseData.LeftHeld)
+        {
+            ProcessHandler::FocusedProcess = this;
+        }
+    }
 }
 
 void Process::SendFamilyMessage(STL::PROM Message, STL::PROI Input)
@@ -163,6 +190,32 @@ void Process::Adopt(Process* Child)
 
     Child->Parent = this;
     this->Children.Push(Child);
+}
+
+Process* Process::FindFamilyMember(const char* TargetTitle)
+{
+    if (this->Title == TargetTitle)
+    {
+        return this;
+    }
+
+    for (uint32_t i = 0; i < this->Children.Length(); i++)
+    {
+        if (this->Children[i]->Title == TargetTitle)
+        {
+            return this->Children[i];
+        }
+        else
+        {
+            Process* Temp = this->Children[i]->FindFamilyMember(TargetTitle);
+            if (Temp != nullptr)
+            {
+                return Temp;
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 void Process::Kill()
