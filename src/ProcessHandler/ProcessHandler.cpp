@@ -25,6 +25,8 @@ namespace ProcessHandler
         {
             GrandFatherProcess->HandleMouseData(MouseData);
         }
+
+        Compositor::UpdateMouse(MouseData);
     }
 
     void PITInterupt(uint64_t Ticks)

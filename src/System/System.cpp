@@ -58,7 +58,7 @@ namespace System
 
         SettableVar SettableVars[] =
         {
-            //SettableVar("drawmouse", &Compositor::DrawMouse, sizeof(Compositor::DrawMouse)),
+            SettableVar("drawmouse", &Compositor::DrawMouse, sizeof(Compositor::DrawMouse)),
             SettableVar("font", &STL::SelectedFont, sizeof(STL::SelectedFont))
         };
 

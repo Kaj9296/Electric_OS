@@ -1,5 +1,6 @@
 #include "Process.h"
 #include "ProcessHandler.h"
+#include "Compositor.h"
 
 #include "Memory/Heap.h"
 #include "Renderer/Renderer.h"
@@ -88,12 +89,14 @@ void Process::HandleRequest()
     case STL::PROR::CLEAR:
     {
         this->FrameBuffer.Clear();
-        this->SendMessage(STL::PROM::CLEAR, &this->FrameBuffer);
+        this->SendMessage(STL::PROM::CLEAR, &this->FrameBuffer);        
+        Compositor::RequestRender();
     }
     break;
     case STL::PROR::DRAW:
     {
         this->SendMessage(STL::PROM::DRAW, &this->FrameBuffer);
+        Compositor::RequestRender();
     }
     break;
     case STL::PROR::KILL:
