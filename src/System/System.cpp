@@ -550,7 +550,7 @@ namespace System
             if (Hash == StartableProcesses[i].Hash)
             {
                 new Process(StartableProcesses[i].Procedure, nullptr);
-                return "";
+                return "Process Started";
             }
         }
 

@@ -138,7 +138,9 @@ namespace Topbar
                 {
                     STL::System("start SystemMenu");
                 }
-                SystemMenuStarted = !SystemMenuStarted;
+                SystemMenuStarted = !SystemMenuStarted;                
+                
+                return STL::PROR::DRAW;
             }
             
             if (StartButton.IsToggled(MouseInfo))
@@ -152,9 +154,9 @@ namespace Topbar
                     STL::System("start StartMenu");
                 }
                 StartMenuStarted = !StartMenuStarted;
-            }
 
-            return STL::PROR::DRAW;
+                return STL::PROR::DRAW;
+            }
         }
         break;
         default:

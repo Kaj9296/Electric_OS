@@ -27,7 +27,9 @@ public:
     Process(STL::PROC Procedure, Process* Parent);
 
 private:
-    
+
+    void SetPos(STL::Point NewPos);
+
     void Kill();
 
     STL::PROR PopRequest();
