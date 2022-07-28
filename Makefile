@@ -8,7 +8,7 @@ CC = gcc
 ASMC = nasm
 LD = ld
 
-CFLAGS = -Wall -fno-rtti -ffreestanding -fno-threadsafe-statics -fno-stack-protector -fno-exceptions -Isrc/ -std=c++20 -Os
+CFLAGS = -Wall -fno-rtti -ffreestanding -fno-threadsafe-statics -fno-stack-protector -fno-exceptions -Isrc/ -std=c++2a -Os
 ASMFLAGS =
 LDFLAGS = -T $(LDS) -Bsymbolic -nostdlib
 

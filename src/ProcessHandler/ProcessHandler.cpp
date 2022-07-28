@@ -25,7 +25,7 @@ namespace ProcessHandler
 
         if (GrandFatherProcess != nullptr)
         {
-            GrandFatherProcess->HandleMouseData(MouseData, STL::Point(0, 0));
+            GrandFatherProcess->ProcessMouseData(MouseData, STL::Point(0, 0));
         }
     }
 

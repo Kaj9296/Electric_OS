@@ -13,12 +13,12 @@ namespace ProcessHandler
     extern Process* GrandFatherProcess;
 
     /// <summary>
-    /// The process that was last created or clicked.
+    /// The process that was last created or clicked. (User focus)
     /// </summary>    
     extern Process* FocusedProcess;
 
     /// <summary>
-    /// The process that is currently in control.
+    /// The process that is currently in control. (System focus)
     /// </summary>       
     extern Process* ActiveProcess;
     

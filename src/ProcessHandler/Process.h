@@ -12,7 +12,7 @@ public:
 
     void HandleRequest();
 
-    void HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin);
+    void ProcessMouseData(STL::MDATA MouseData, STL::Point DomainOrigin);
 
     void SendFamilyMessage(STL::PROM Message, STL::PROI Input = nullptr);
 
@@ -21,6 +21,8 @@ public:
     void PushRequest(STL::PROR Request);
 
     void Adopt(Process* Child);
+
+    void MoveToFront();
 
     Process* FindFamilyMember(const char* TargetTitle);
 

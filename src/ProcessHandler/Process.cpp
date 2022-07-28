@@ -120,8 +120,24 @@ void Process::HandleRequest()
     }
 }
 
-void Process::HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin)
+void Process::ProcessMouseData(STL::MDATA MouseData, STL::Point DomainOrigin)
 {    
+    static STL::Point PrevMousePos = STL::Point(0, 0);
+    static Process* MovingWindow = nullptr;
+    if (MovingWindow != nullptr)
+    {
+        if (!MouseData.LeftHeld)
+        {
+            MovingWindow = nullptr;
+        }
+        
+        MovingWindow->SetPos(MovingWindow->Pos + (MouseData.Pos - PrevMousePos));
+        PrevMousePos = MouseData.Pos;
+        Compositor::RequestRender();
+
+        return;
+    }
+
     STL::Point ScreenPos = DomainOrigin + this->Pos;
     STL::Point TopLeft = ScreenPos - FrameSize;
     STL::Point BottomRight = ScreenPos + STL::Point(this->FrameBuffer.Width, this->FrameBuffer.Height) + FrameSize;
@@ -136,26 +152,14 @@ void Process::HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin)
             
             if (STL::Contains(ChildTopLeft, ChildBottomRight, MouseData.Pos))
             {            
-                this->Children[i]->HandleMouseData(MouseData, ScreenPos);
+                this->Children[i]->ProcessMouseData(MouseData, ScreenPos);
                 return;
             }
         }
 
-        static STL::Point PrevMousePos = STL::Point(0, 0);
-        static Process* MovingWindow = nullptr;
-
         if (MouseData.LeftHeld)
         {          
             ProcessHandler::FocusedProcess = this; 
-
-            if (MovingWindow != nullptr)
-            {
-                MovingWindow->SetPos(MovingWindow->Pos + (MouseData.Pos - PrevMousePos));
-                PrevMousePos = MouseData.Pos;
-                Compositor::RequestRender();
-
-                return;
-            }
 
             STL::Point BottomRightTopbar = ScreenPos + STL::Point(this->FrameBuffer.Width, 0) + FrameSize;
             if (STL::Contains(TopLeft, BottomRightTopbar, MouseData.Pos)) //If mouse over topbar
@@ -167,18 +171,19 @@ void Process::HandleMouseData(STL::MDATA MouseData, STL::Point DomainOrigin)
                 {
                     this->Kill();
                 }
-                else
+                else if (STL::Contains(MinimizeButtonPos, MinimizeButtonPos + MINIMIZE_BUTTON_SIZE, MouseData.Pos)) //If mouse over minimize button
                 {
+                    this->Kill();
+                }
+                else //If not over a button but still over topbar
+                {
+                    this->MoveToFront();
                     MovingWindow = this;
                     PrevMousePos = MouseData.Pos;
                 }
 
                 return;
             }
-        }
-        else
-        {
-            MovingWindow = nullptr;
         }
 
         MouseData.Pos = MouseData.Pos - ScreenPos;
@@ -227,6 +232,23 @@ void Process::Adopt(Process* Child)
     this->Children.Push(Child);
 }
 
+void Process::MoveToFront()
+{
+    if (this->Parent != nullptr)
+    {
+        for (int i = 0; i < this->Parent->Children.Length() - 1; i++)
+        {
+            if (this->Parent->Children[i] == this)
+            {
+                Process* Temp = this->Parent->Children.Last();
+                this->Parent->Children.Last() = this;
+                this->Parent->Children[i] = Temp;
+                return;
+            }
+        }
+    }
+}
+
 Process* Process::FindFamilyMember(const char* TargetTitle)
 {
     if (this->Title == TargetTitle)
@@ -264,6 +286,11 @@ void Process::SetPos(STL::Point NewPos)
 
 void Process::Kill()
 {
+    for (uint64_t i = 0; i < this->Children.Length(); i++)
+    {
+        this->Children[i]->Kill();
+    }
+
     this->SendMessage(STL::PROM::KILL, nullptr);
 
     Heap::Free(FrameBuffer.Base);
@@ -290,6 +317,8 @@ void Process::Kill()
     }
     
     Heap::Free(this);
+
+    Compositor::RequestRender();
 }
 
 STL::PROR Process::PopRequest()
