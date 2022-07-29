@@ -54,7 +54,7 @@ namespace StartMenu
                 StartableProcesses[i].Button = STL::Button(STL::ARGB(200), StartableProcesses[i].Name.cstr(), TopLeft, BottomRight);
             }
 
-            Info->Type = STL::PROT::FRAMELESSWINDOW;
+            Info->Type = STL::PROT::CHILD;
             Info->Depth = 1;
             Info->Left = 25;
             Info->Top = 50;

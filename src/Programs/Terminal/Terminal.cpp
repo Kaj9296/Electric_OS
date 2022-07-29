@@ -33,7 +33,8 @@ namespace Terminal
         case STL::PROM::INIT:
         {
             STL::PINFO* Info = (STL::PINFO*)Input;
-            Info->Type = STL::PROT::WINDOWED;
+            Info->Type = STL::PROT::CHILD;
+            Info->Frame = STL::SimpleWindowFrame;
             Info->Depth = 1;
             Info->Left = 360;
             Info->Top = 200;

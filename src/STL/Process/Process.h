@@ -4,6 +4,9 @@
 
 #include "STL/Math/Point.h"
 #include "STL/String/String.h"
+#include "STL/Array/Array.h"
+#include "STL/GUI/WindowFrame.h"
+#include "STL/GUI/WindowButton.h"
 
 namespace STL
 {
@@ -30,9 +33,7 @@ namespace STL
     enum class PROT //Process Type
     {
         GRANDFATHER,
-        WINDOWED,
-        FRAMELESSWINDOW,
-        MINIMIZED
+        CHILD,
     };
 
     typedef void* PROI; //Process input
@@ -54,6 +55,10 @@ namespace STL
         uint64_t Top;
 
         String Title;
+
+        WindowFrame Frame;
+
+        STL::Array<STL::WindowButton, 8> FrameButtons;
     };
 
     struct MDATA //Mouse Data

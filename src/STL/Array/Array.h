@@ -6,39 +6,18 @@
 
 namespace STL
 {
-    template<typename T>
-    class List
+    template<typename T, int MaxSize>
+    class Array
     {
     public:
 
-        void Reserve(uint32_t MinSize)
-        {
-            if (MinSize <= this->ReservedSize)
-            {
-                return;
-            }
-
-            this->ReservedSize = MinSize * 2;    
-            T* NewData = (T*)Malloc(this->ReservedSize);
-
-            if (this->Data != nullptr)
-            {        
-                for (uint32_t i = 0; i < this->Size; i++)
-                {
-                    NewData[i] = this->Data[i];
-                }
-
-                Free(this->Data);
-            }
-
-            this->Data = NewData;
-        }
-
         void Push(T const& NewElement)
         {      
-            this->Size++;
-            this->Reserve(this->Size);
-            this->Data[Size - 1] = NewElement;
+            if (this->Size < MaxSize)
+            {
+                Data[Size] = NewElement;
+                Size++;
+            }
         }
 
         T Pop()
@@ -54,10 +33,7 @@ namespace STL
 
         void Clear()
         {
-            Free(this->Data);
-            this->Data = nullptr;
             this->Size = 0;
-            this->ReservedSize = 0;
         }
 
         void Erase(uint32_t Index)
@@ -93,23 +69,20 @@ namespace STL
             return Data[Index];
         }
 
-        List()
+        Array()
         {
-            this->Data = nullptr;
             this->Size = 0;
-            this->ReservedSize = 0;
         }
 
-        ~List()
+        ~Array()
         {
             this->Clear();
         }
 
     private:
 
-        T* Data = nullptr;
+        T Data[MaxSize];
 
         uint32_t Size = 0;
-        uint32_t ReservedSize = 0;
     };  
 }

@@ -68,7 +68,7 @@ namespace Topbar
         case STL::PROM::INIT:
         {
             STL::PINFO* Info = (STL::PINFO*)Input;
-            Info->Type = STL::PROT::FRAMELESSWINDOW;
+            Info->Type = STL::PROT::CHILD;
             Info->Depth = 1;
             Info->Left = 0;
             Info->Top = 0;

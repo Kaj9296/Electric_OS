@@ -1,6 +1,6 @@
 #include "System.h"
 
-#include "System/System.h"
+#include "Kernel/System/System.h"
 
 void* operator new(uint64_t Size) 
 {
