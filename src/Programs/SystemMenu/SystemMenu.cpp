@@ -87,20 +87,23 @@ namespace SystemMenu
             if (TTYButton.IsToggled(MouseInfo))
             {
                 STL::System("set drawmouse 0");
-                STL::System("start tty");
+                STL::System("start tty");            
             }
 
             if (RestartButton.IsToggled(MouseInfo))
             {
-                STL::System("restart");
+                STL::System("restart");            
             }
             
             if (ShutDownButton.IsToggled(MouseInfo))
             {
-                STL::System("shutdown");
+                STL::System("shutdown");            
             }
 
-            return STL::PROR::DRAW;
+            if (MouseInfo.KeyStateChanged)
+            {
+                return STL::PROR::DRAW;
+            }
         }
         break;
         default:

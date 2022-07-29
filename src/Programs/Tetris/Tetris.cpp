@@ -591,6 +591,7 @@ namespace Tetris
             STL::PINFO* Info = (STL::PINFO*)Input;
             Info->Type = STL::PROT::CHILD;
             Info->Frame = STL::SimpleWindowFrame;
+            Info->FrameButtons.Push(STL::SimpleCloseButton);
             Info->Depth = 1;
             Info->Left = 360;
             Info->Top = 200;
@@ -700,8 +701,6 @@ namespace Tetris
         case STL::PROM::MOUSE:
         {
             STL::MDATA MouseInfo = *(STL::MDATA*)Input;
-
-            return STL::PROR::DRAW;
         }
         break;
         default:

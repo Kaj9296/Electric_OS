@@ -232,7 +232,7 @@ namespace Calculator
 
             if (PointButton.IsPressed(MouseInfo))
             {
-                
+                return STL::PROR::DRAW;
             }
 
             if (AddButton.IsPressed(MouseInfo))
@@ -259,7 +259,7 @@ namespace Calculator
                 Label.Text = STL::ToString(PreviousNum * NewNum);
                 ClearLabel = true;
                 PreviousOperator = '*';
-                PreviousNum = NewNum;              
+                PreviousNum = NewNum;  
             }
 
             if (DivButton.IsPressed(MouseInfo))
@@ -278,7 +278,10 @@ namespace Calculator
                 PreviousNum = NewNum;
             }
 
-            return STL::PROR::DRAW;
+            if (MouseInfo.KeyStateChanged)
+            {
+                return STL::PROR::DRAW;
+            }
         }
         break;
         default:

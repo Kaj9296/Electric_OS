@@ -142,23 +142,18 @@ namespace Mouse
             }
 
             /// Check for button presses.    
-            bool LeftHeld = false;          
-            bool MiddleHeld = false;  
-            bool RightHeld = false;
+            static bool LeftHeld = false;          
+            static bool MiddleHeld = false;  
+            static bool RightHeld = false;
+            
+            bool OldLeftHeld = LeftHeld;
+            bool OldMiddleHeld = MiddleHeld;
+            bool OldRightHeld = RightHeld;
 
-            if ((MousePacket[0] & PS2Leftbutton))
-            {
-                LeftHeld = true;
-            }  
-            if ((MousePacket[0] & PS2Middlebutton))
-            {
-                MiddleHeld = true;
-            }
-            if ((MousePacket[0] & PS2Rightbutton))
-            {
-                RightHeld = true;
-            }
-
+            LeftHeld = MousePacket[0] & PS2Leftbutton;  
+            MiddleHeld = MousePacket[0] & PS2Middlebutton;
+            RightHeld = MousePacket[0] & PS2Rightbutton;
+            
             /// Clamp mouse pos to the screen.
             MousePos.X = STL::Clamp(MousePos.X, 0, Renderer::GetScreenSize().X - 8);
             MousePos.Y = STL::Clamp(MousePos.Y, 0, Renderer::GetScreenSize().Y - 16);
@@ -168,7 +163,8 @@ namespace Mouse
             MouseData.LeftHeld = LeftHeld;
             MouseData.MiddleHeld = MiddleHeld;
             MouseData.RightHeld = RightHeld;
-            
+            MouseData.KeyStateChanged = (LeftHeld != OldLeftHeld) || (MiddleHeld != OldMiddleHeld) || (RightHeld != OldRightHeld);
+
             ProcessHandler::MouseInterupt(MouseData);
         }
         break;

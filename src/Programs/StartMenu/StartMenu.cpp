@@ -105,11 +105,14 @@ namespace StartMenu
                     STL::String Command;
                     Command = "start ";
                     Command += StartableProcesses[i].Name;
-                    STL::System(Command.cstr());
+                    STL::System(Command.cstr());           
                 }
             }
 
-            return STL::PROR::DRAW;
+            if (MouseInfo.KeyStateChanged)
+            {
+                return STL::PROR::DRAW;
+            }
         }
         break;
         default:

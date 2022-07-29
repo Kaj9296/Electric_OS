@@ -70,5 +70,7 @@ namespace STL
         bool MiddleHeld;
         
         bool RightHeld;
+
+        bool KeyStateChanged;
     };
 }   
