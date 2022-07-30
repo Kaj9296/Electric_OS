@@ -6,9 +6,9 @@
 
 namespace STL
 {    
-    extern uint8_t SelectedFont;
+    void AddFont(PSF_FONT* NewFont, const char* FontName);
 
-    void SetFonts(PSF_FONT** NewFonts, uint8_t NewFontAmount);
+    bool SetFont(const char* FontName);
 
-    const PSF_FONT* GetFont();
+    const PSF_FONT* GetSelectedFont();
 }

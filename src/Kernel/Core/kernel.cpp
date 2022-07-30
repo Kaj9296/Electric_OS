@@ -21,12 +21,13 @@ extern "C" void KernelMain(BootLoaderInfo* BootInfo)
 	UEFI::Init(BootInfo->RT);
 
 	//Heap setup.
-	PageAllocator::Init(BootInfo->MemoryMap, BootInfo->ScreenBuffer);
+	PageAllocator::Init(BootInfo->MemoryMap);
 	PageTableManager::Init(BootInfo->ScreenBuffer);
 	Heap::Init();
 
 	//Font setup.
-	STL::SetFonts(BootInfo->PSFFonts, BootInfo->FontAmount);
+	STL::AddFont(BootInfo->PSFFonts[0], "zap-vga16");	
+	STL::AddFont(BootInfo->PSFFonts[1], "zap-light16");
 	Renderer::Init(BootInfo->ScreenBuffer);
 
 	//Interrupt setup.

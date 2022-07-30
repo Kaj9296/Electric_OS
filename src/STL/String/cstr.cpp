@@ -106,6 +106,27 @@ namespace STL
         return 0;
     }
 
+    bool StringCompare(const char* String1, const char* String2)
+    {
+        uint64_t String1Length = Length(String1);
+        uint64_t String2Length = Length(String2);
+
+        if (String1Length != String2Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < String1Length; i++)
+        {
+            if (String1[i] != String2[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     char* CopyString(char* Dest, const char* Source)
     {
         uint64_t SourceLength = Length(Source);

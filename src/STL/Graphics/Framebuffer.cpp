@@ -150,7 +150,7 @@ namespace STL
 
     void Framebuffer::PutChar(char chr, STL::Point Pos, uint8_t Scale, ARGB Foreground, ARGB Background)
     {
-        char* Glyph = GetFont()->glyphBuffer + (chr * GetFont()->PSF_header->charsize);
+        char* Glyph = GetSelectedFont()->glyphBuffer + (chr * GetSelectedFont()->PSF_header->charsize);
 
         for (uint64_t y = 0; y < 16 * Scale; y++)
         {

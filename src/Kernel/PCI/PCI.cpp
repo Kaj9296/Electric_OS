@@ -27,6 +27,11 @@ namespace PCI
 
     bool Enumerate(DeviceHeader*& Out)
     {        
+        if (Out == nullptr)
+        {
+            ResetEnumeration();
+        }
+
         uint64_t Entries = (MCFG->Length - (sizeof(SDTHeader) + 8)) / sizeof(DeviceConfig);
 
         for (; Entry < Entries; Entry++)

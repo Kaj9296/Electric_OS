@@ -13,14 +13,14 @@ namespace PageTableManager
         PML4 = (PageTable*)PageAllocator::RequestPage();
         STL::SetMemory(PML4, 0, 4096);
 
-        for (uint64_t i = 0; i < ScreenBuffer->Size + 4096; i += 4096)
-        {
-            MapAddress((void*)((uint64_t)ScreenBuffer->Base + i), (void*)((uint64_t)ScreenBuffer->Base + i));
-        }
-
         for (uint64_t i = 0; i < PageAllocator::PageAmount; i++)
         {
             MapAddress((void*)(i * 4096), (void*)(i * 4096));
+        }
+
+        for (uint64_t i = 0; i < ScreenBuffer->Size + 4096; i += 4096)
+        {
+            MapAddress((void*)((uint64_t)ScreenBuffer->Base + i), (void*)((uint64_t)ScreenBuffer->Base + i));
         }
 
         asm ("mov %0, %%cr3" : : "r" (PML4));

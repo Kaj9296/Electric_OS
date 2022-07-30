@@ -1,9 +1,5 @@
 #include "ACPI.h"
 
-#include "Kernel/Renderer/Renderer.h"
-
-#include "STL/String/cstr.h"
-
 namespace ACPI
 {
     RSDP2* RSDP;

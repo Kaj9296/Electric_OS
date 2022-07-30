@@ -1,7 +1,5 @@
 #include "PageAllocator.h"
 
-#include "STL/String/cstr.h"
-
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;
 
@@ -29,7 +27,7 @@ namespace PageAllocator
         }
     }
 
-    void Init(EFI_MEMORY_MAP* MemoryMap, STL::Framebuffer* ScreenBuffer)
+    void Init(EFI_MEMORY_MAP* MemoryMap)
     {   
         PageAmount = 0;
         for (uint64_t i = 0; i < MemoryMap->Size / MemoryMap->DescSize; i++)
@@ -65,8 +63,6 @@ namespace PageAllocator
             }
         }
         LockPages(&_KernelStart, ((uint64_t)&_KernelEnd - (uint64_t)&_KernelStart) / 4096 + 1);
-           
-        LockPages(ScreenBuffer->Base, ScreenBuffer->Size / 4096 + 1);
     }
 
     uint64_t GetFreePages()

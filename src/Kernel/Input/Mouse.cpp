@@ -1,10 +1,10 @@
 #include "Mouse.h"
 
-#include <stdint.h>
-
 #include "Kernel/IO/IO.h"
 #include "Kernel/Renderer/Renderer.h"
 #include "Kernel/ProcessHandler/ProcessHandler.h"
+
+#include "STL/Math/Math.h"
 
 #define PS2Leftbutton   0b00000001
 #define PS2Middlebutton 0b00000100

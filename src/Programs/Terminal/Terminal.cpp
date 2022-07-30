@@ -182,6 +182,8 @@ namespace Terminal
             Text = "";
             Command[0] = 0;
             CursorPos = STL::Point(0, 0);
+
+            return STL::PROR::DRAW;
         }
         break;
         case STL::PROM::KILL:

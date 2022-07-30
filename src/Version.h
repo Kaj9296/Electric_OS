@@ -1,1 +1,1 @@
-#define OS_VERSION "Electric_OS 19/02/2022"
+#define OS_VERSION "Electric_OS 30/07/2022"

@@ -37,5 +37,7 @@ namespace STL
 
     uint64_t Length(const char* String);
 
+    bool StringCompare(const char* String1, const char* String2);
+    
     char* CopyString(char* Dest, const char* Source);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "STL/Math/Point.h"
+#include <stdint.h>
 
 namespace Mouse
 {

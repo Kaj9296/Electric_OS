@@ -1,7 +1,6 @@
 #include "AHCI.h"
 #include "Kernel/PCI/PCI.h"
 #include "Kernel/Memory/Paging/PageTable.h"
-#include "Kernel/Renderer/Renderer.h"
 
 namespace AHCI
 {
@@ -10,7 +9,7 @@ namespace AHCI
 
     void Init()
     {
-        DeviceHeader* Device;
+        DeviceHeader* Device = nullptr;
         PCI::ResetEnumeration();
         while (PCI::Enumerate(Device))
         { 

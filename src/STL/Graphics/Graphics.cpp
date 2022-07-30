@@ -1,24 +1,58 @@
 #include "Graphics.h"
 
+#include "STL/Array/Array.h"
+#include "STL/String/cstr.h"
+
 namespace STL
 {
-    PSF_FONT** Fonts;
-    uint8_t FontAmount;
+    struct Font
+    {
+        PSF_FONT* PSFFont;
+        const char* Name;
+
+        Font(PSF_FONT* NewFont, const char* FontName)
+        {
+            this->PSFFont = NewFont;
+            this->Name = FontName;
+        }
+
+        Font() = default;
+    };
+    Font Fonts[16];
+    uint32_t FontAmount = 0;
+
     uint8_t SelectedFont = 0;
 
-    void SetFonts(PSF_FONT** NewFonts, uint8_t NewFontAmount)
+    void AddFont(PSF_FONT* NewFont, const char* FontName)
     {
-        Fonts = NewFonts;
-        FontAmount = NewFontAmount;
+        if (FontAmount < 16)
+        {
+            Fonts[FontAmount] = Font(NewFont, FontName);
+            FontAmount++;
+        }
     }
 
-    const PSF_FONT* GetFont()
+    bool SetFont(const char* FontName)
+    {
+        for (int i = 0; i < FontAmount; i++)
+        {
+            if (StringCompare(Fonts[i].Name, FontName))
+            {
+                SelectedFont = i;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    const PSF_FONT* GetSelectedFont()
     {
         if (SelectedFont >= FontAmount)
         {
             SelectedFont = 0;
         }
 
-        return Fonts[SelectedFont];
+        return Fonts[SelectedFont].PSFFont;
     }
 }

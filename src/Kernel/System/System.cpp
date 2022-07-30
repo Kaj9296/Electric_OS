@@ -59,7 +59,6 @@ namespace System
         SettableVar SettableVars[] =
         {
             SettableVar("drawmouse", &Compositor::DrawMouse, sizeof(Compositor::DrawMouse)),
-            SettableVar("font", &STL::SelectedFont, sizeof(STL::SelectedFont))
         };
 
         uint64_t Hash = STL::HashWord(Variable);
@@ -311,7 +310,16 @@ namespace System
             Manual("clear", "Send a request to clear the framebuffer of the process that called the command.",
             FOREGROUND_COLOR(086, 182, 194)"\nNAME:\n\r"
             FOREGROUND_COLOR(255, 255, 255)"    clear - Send a request to clear the framebuffer of the process that called the command.\n\r"
-            ),           
+            ),/*           
+            Manual("setfont", "Changes the font used to render text to the screen.",
+            FOREGROUND_COLOR(086, 182, 194)"\nNAME:\n\r"
+            FOREGROUND_COLOR(255, 255, 255)"    setfont - Changes the font used to render text to the screen.\n\r"
+            FOREGROUND_COLOR(086, 182, 194)"SYNOPSIS:\n\r"
+            FOREGROUND_COLOR(255, 255, 255)"    setfont [FONT]\n\n\r"
+            FOREGROUND_COLOR(224, 108, 117)"    FONT:\n\r"
+            FOREGROUND_COLOR(255, 255, 255)"        zap-vga16\n\r"
+            FOREGROUND_COLOR(255, 255, 255)"        zap-light16\n\r"
+            ),*/            
             Manual("start", "An interface to start any kernel level processes.",
             FOREGROUND_COLOR(086, 182, 194)"\nNAME:\n\r"
             FOREGROUND_COLOR(255, 255, 255)"    start - An interface to start any kernel level processes.\n\n\r"
@@ -442,6 +450,19 @@ namespace System
         }
         return "";
     }
+
+    const char* CommandSetFont(const char* Command)
+    {
+        if (STL::SetFont(STL::NextWord(Command)))
+        {
+            return "Font set";
+        }
+        else
+        {
+            return "ERROR: Font not found";
+        }
+        return "";
+    }    
 
     const char* CommandClear(const char* Command)
     {
@@ -690,6 +711,7 @@ namespace System
             Command("date", CommandDate),
             Command("kill", CommandKill),
             Command("clear", CommandClear),
+            Command("setfont", CommandSetFont),
             Command("start", CommandStart),
             Command("restart", CommandRestart),
             Command("shutdown", CommandShutdown),
